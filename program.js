@@ -1,16 +1,25 @@
 const _ = require('lodash');
 const { toArray } = require('lodash');
 
-const worker = function(list){
-  return _.forEach(list, function(element) {
-    if (element.population > 1) {
-      element.size = "big";
-    } else if(element.population > 0.5) {
-      element.size = "med";
-    } else {
-      element.size = "small";
+const worker = function (item) {
+    let result = {
+        warm: [],
+        hot: []
     }
-  });
+
+    const check_temp = (item) => item > 19;
+
+    _.forEach(item, function (town, townname) {
+        if (_.every(town, check_temp)) {
+            result.hot.push(townname);
+        } else if (_.some(town, check_temp)) {
+            result.warm.push(townname);
+        }
+
+    });
+    return result;
 };
+
+
 
 module.exports = worker;
