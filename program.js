@@ -1,15 +1,20 @@
 const _ = require('lodash');
-const { result } = require('lodash');
+const { result, over } = require('lodash');
 require('lodash');
 
-const worker = function (articles) {
+const worker = function (freelancers) {
+    let average = _.meanBy(freelancers, (f) => f.income);
 
-    return _.chain(articles).groupBy('article')
-        .map((element, key) => {
-            return { article: parseInt(key), total_orders: _.reduce(element, (result, value) => result += value.quantity, 0) }
-        }).sortBy(element => -element.total_orders);
+    let underperform = [];
+    let overperform = [];
+
+    _.filter(freelancers, (f) => (f.income <= average ? underperform.push(f): overperform.push(f)));
+
+    underperform = _.sortBy(underperform, (f)=>f.income);
+    overperform = _.sortBy(overperform, (f)=>f.income);
+
+    return {average, underperform, overperform};
 };
-
 
 
 module.exports = worker;
