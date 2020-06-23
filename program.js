@@ -1,12 +1,20 @@
 const _ = require('lodash');
-const { toArray } = require('lodash');
+require('lodash');
 
-const worker = function (item) {
-    let chainedWords = _.chain(item).map(function(word){
-        word = word + "chained"; 
-        return word.toUpperCase();
-    }).sortBy();
-    return chainedWords;
+const worker = function(comms) {
+    let counted = [];
+
+    // Group by username
+    comms = _.groupBy(comms, "username");
+
+    _.forEach(comms, function (item, name) {
+        counted.push({
+            username: name,
+            comment_count: _.size(item)
+        });
+    });
+
+    return _.sortBy(counted, "comment_count").reverse();
 };
 
 
