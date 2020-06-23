@@ -1,20 +1,13 @@
 const _ = require('lodash');
+const { result } = require('lodash');
 require('lodash');
 
-const worker = function(comms) {
-    let counted = [];
+const worker = function (articles) {
 
-    // Group by username
-    comms = _.groupBy(comms, "username");
-
-    _.forEach(comms, function (item, name) {
-        counted.push({
-            username: name,
-            comment_count: _.size(item)
-        });
-    });
-
-    return _.sortBy(counted, "comment_count").reverse();
+    return _.chain(articles).groupBy('article')
+        .map((element, key) => {
+            return { article: parseInt(key), total_orders: _.reduce(element, (result, value) => result += value.quantity, 0) }
+        }).sortBy(element => -element.total_orders);
 };
 
 
